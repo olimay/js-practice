@@ -196,58 +196,142 @@ var anotherCell = function() {
 
 }();
 
+
 var sequenceInterface = function() {
   'use strict';
 
-  function Sequence(elem) {
+  /**
+   * Represents a sequence of elements from an array.
+   * @constructor
+   * @param {Array} elem - An array
+   */
+  function ArraySeq(elem) {
     this._elements = elem;
     this._i = null;
+    return this;
   }
 
-  Sequence.prototype.start = function start() {
-    return this._elements[0];
+  /**
+   * Returns the first element in the list, or undefined if no elements
+   * are defined.
+   */
+  ArraySeq.prototype.start = function start() {
+    if (this._elements) { return this._elements[0]; }
   }
 
-  Sequence.prototype.reset = function reset() {
+  /**
+   * Sets the current element to the first element in the sequence.
+   */
+  ArraySeq.prototype.reset = function reset() {
     this._i = 0;
   }
 
-  Object.defineProperty(Sequence.prototype, 'length', {
+  Object.defineProperty(ArraySeq.prototype, 'length', {
     get: function() { return this._elements.length; }
   });
 
-  Sequence.prototype.current = function current() {
+  ArraySeq.prototype.current = function current() {
     if (this._elements.length) {
-      if (!this._i) { this._i = 0; }
+      if (!this._i) {
+        this._i = 0;
+      }
       return this._elements[this._i];
     }
   };
 
-  Sequence.prototype.previous = function previous() {
-    if (this._1 > 0) {
+  Object.defineProperty(ArraySeq.prototype, 'index', {
+    get: function index() { return this._i; }
+  });
+
+  /**
+   * Returns the element before the current element in the list, or undefined
+   * if the current element is the start of the sequence.
+   */
+  ArraySeq.prototype.previous = function previous() {
+    if (this._i > 0) {
       return this._elements[this._i - 1];
     }
-  }
+  };
 
-  Sequence.prototype.next = function next() {
-    if (this._i < this.length -1) {
+  /**
+   * Sets the current element to the next element, and returns that value, or
+   * false if the sequence has previously reached the last element.
+   */
+  ArraySeq.prototype.next = function next() {
+    if (this._i < this.length - 1) {
       this._i++;
+      return this.current();
+    }
+    return false;
+  };
+
+  /**
+   * Returns true if the sequence has previously reached the last element since
+   * the last reset.
+   */
+  ArraySeq.prototype.reachedEnd = function end() {
+    if (!this.length || this._i === this.length - 1) {
       return true;
     }
     return false;
   };
 
-  Sequence.prototype.reachedEnd = function end() {
-    if (!this.length || this._i == this.length - 1) {
-      return true;
-    }
-    return false;
+
+  /**
+   * Represents an increasing sequence of consecutive integers.
+   * @constructor
+   * @param {number} from - first integer in the sequence
+   * @param {numher} to - final integer in the sequence
+   */
+  function RangeSeq(from, to) {
+    this._cur = from;
+    this._last = (from < to) ? to : from;
+    return this;
   }
 
-  Object.defineProperty(Sequence.prototype, 'index', {
-    get: function index() { return this._i; }
-  });
-  
-  // todo
+  /**
+   * Return the current element in the sequence.
+   * @returns {Number}
+   */
+  RangeSeq.prototype.current = function current() {
+    return this._cur;
+  };
+
+  /**
+   * Return true if sequece has reached the last element, false otherwise.
+   * @returns {Boolean}
+   */
+  RangeSeq.prototype.reachedEnd = function end() {
+    return !(this._cur < this._last);
+  };
+
+  /**
+   * Sets the current element to the next integer in the sequence, and return it.
+   */
+  RangeSeq.prototype.next = function next() {
+    if (!this.reachedEnd()) {
+      this._cur++;
+      return this._cur;
+    }
+    return false;
+  };
+
+  function logFive(seq) {
+    var i = 0;
+    do {
+      console.log(seq.current());
+      i++;
+    } while (i < 5 && seq.next());
+  }
+
+  logFive(new ArraySeq([1, 2]));
+  // → 1
+  // → 2
+  logFive(new RangeSeq(100, 1000));
+  // → 100
+  // → 101
+  // → 102
+  // → 103
+  // → 104
 }();
 
