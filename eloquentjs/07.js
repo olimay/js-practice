@@ -722,6 +722,13 @@ var electronicLife = function () {
     return { type: 'move', direction: this.direction };
   };
 
+  /**
+   * Represents a Tiger critter, which is a predator.
+   */
+  function Tiger() {
+    // stub
+  }
+
   /*******************************
    * Tests
    */
@@ -863,6 +870,32 @@ var electronicLife = function () {
       '*': Plant}
       );
   runWorld(valleyTwo, 500);
+
+  var predatorWorld = new LifelikeWorld(
+      ["####################################################",
+      "#                 ####         ****              ###",
+      "#   *  @  ##                 ########       OO    ##",
+      "#   *    ##        O O                 ****       *#",
+      "#       ##*                        ##########     *#",
+      "#      ##***  *         ****                     **#",
+      "#* **  #  *  ***      #########                  **#",
+      "#* **  #      *               #   *              **#",
+      "#     ##              #   O   #  ***          ######",
+      "#*            @       #       #   *        O  #    #",
+      "#*                    #  ######                 ** #",
+      "###          ****          ***                  ** #",
+      "#       O                        @         O       #",
+      "#   *     ##  ##  ##  ##               ###      *  #",
+      "#   **         #              *       #####  O     #",
+      "##  **  O   O  #  #    ***  ***        ###      ** #",
+      "###               #   *****                    ****#",
+      "####################################################"],
+      {"#": Wall,
+        "@": Tiger,
+        "O": SmartPlantEater, // from previous exercise
+        "*": Plant}
+  );
+
 
   // }
 } ();
