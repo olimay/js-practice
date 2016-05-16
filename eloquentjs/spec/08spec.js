@@ -154,6 +154,13 @@ describe("EJS 08 - \"Bugs and Error Handling\" exercises", function () {
           }
         });
 
+        it("should keep box unlocked if already unlocked", function () {
+          expect(lockedbox.box.locked).toBe(true);
+          lockedbox.box.locked = false;
+          lockedbox.withBoxUnlocked(function () {});
+          expect(lockedbox.box.locked).toBe(false);
+        });
+
       });
 
     });

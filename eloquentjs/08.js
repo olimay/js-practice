@@ -46,12 +46,13 @@ ejs08.lockedbox = function LockedBox() {
   };
 
   function withBoxUnlocked(body) {
+    var lockedStatus = this.box.locked;
     this.box.locked = false;
     if (body instanceof Function) {
       try {
         body();
       } finally {
-        this.box.locked = true;
+        this.box.locked = lockedStatus;
       }
     }
   }
